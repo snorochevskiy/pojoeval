@@ -1,4 +1,4 @@
-package com.github.snorochevskiy.pojoeval.reflect;
+package snorochevskiy.pojoeval.reflect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

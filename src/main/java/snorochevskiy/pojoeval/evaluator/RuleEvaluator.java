@@ -1,12 +1,12 @@
-package com.github.snorochevskiy.pojoeval.evaluator;
+package snorochevskiy.pojoeval.evaluator;
 
-import com.github.snorochevskiy.pojoeval.evaluator.exception.DslError;
-import com.github.snorochevskiy.pojoeval.evaluator.exception.EvalException;
-import com.github.snorochevskiy.pojoeval.reflect.ReflectionUtils;
+import snorochevskiy.pojoeval.evaluator.exception.DslError;
+import snorochevskiy.pojoeval.evaluator.exception.EvalException;
+import snorochevskiy.pojoeval.reflect.ReflectionUtils;
 import org.antlr.v4.runtime.*;
 
-import com.github.snorochevskiy.pojoeval.rules.dsl.parser.RuleDslLexer;
-import com.github.snorochevskiy.pojoeval.rules.dsl.parser.RuleDslParser;
+import snorochevskiy.pojoeval.rules.dsl.parser.RuleDslLexer;
+import snorochevskiy.pojoeval.rules.dsl.parser.RuleDslParser;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 

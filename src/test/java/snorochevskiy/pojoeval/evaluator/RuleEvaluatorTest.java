@@ -1,7 +1,7 @@
-package com.github.snorochevskiy.pojoeval.evaluator;
+package snorochevskiy.pojoeval.evaluator;
 
-import com.github.snorochevskiy.pojoeval.evaluator.exception.DslError;
-import com.github.snorochevskiy.pojoeval.evaluator.exception.EvalException;
+import snorochevskiy.pojoeval.evaluator.exception.DslError;
+import snorochevskiy.pojoeval.evaluator.exception.EvalException;
 import org.junit.Assert;
 import org.junit.Test;
 

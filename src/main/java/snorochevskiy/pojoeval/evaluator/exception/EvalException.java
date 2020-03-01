@@ -1,4 +1,4 @@
-package com.github.snorochevskiy.pojoeval.evaluator.exception;
+package snorochevskiy.pojoeval.evaluator.exception;
 
 public class EvalException extends RuntimeException {
 
