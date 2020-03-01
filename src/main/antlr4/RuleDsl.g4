@@ -37,7 +37,7 @@ eqExpr
 relExpr
   : Identifier
   | StringLiteral
-//  | DigitSequence // We don't need numbers right?
+//  | DigitSequence // TODO: add numbers support
   ;
 
 stringList : OpSqBk (StringLiteral Comma )* StringLiteral ClSqBk ;
@@ -93,7 +93,7 @@ SCharSequence
 fragment
 SChar
     :   ~["\r\n]
-//    |   EscapeSequence // Do we need escape sequences here?
+//    |   EscapeSequence // Are escape sequences needed?
     |   '\\\n'   // Added line
     |   '\\\r\n' // Added line
     ;

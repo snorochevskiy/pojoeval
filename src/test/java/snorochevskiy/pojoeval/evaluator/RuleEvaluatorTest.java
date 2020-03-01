@@ -20,7 +20,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -32,7 +34,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -44,7 +48,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -56,7 +62,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -68,7 +76,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -80,7 +90,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -92,7 +104,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -104,7 +118,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -116,7 +132,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -128,7 +146,9 @@ public class RuleEvaluatorTest {
 
         Exception e = null;
         try {
-            new RuleEvaluator<>(rule, Programmer.class);
+            RuleEvaluator.<Programmer>createForRule(rule)
+                    .validateAgainstClass(Programmer.class)
+                    .build();
         } catch (Exception ex) {
             e = ex;
         }
@@ -148,7 +168,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -160,7 +182,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -172,7 +196,9 @@ public class RuleEvaluatorTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -186,7 +212,10 @@ public class RuleEvaluatorTest {
 
         Map<String, Function<Programmer,Object>> extractors = Collections.singletonMap("fullName",
                 (Programmer p)->p.getFirstName() + " " + p.getLastName());
-        RuleEvaluator<Programmer> evaluator = new RuleEvaluator<>(rule, Programmer.class, extractors);
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .withFieldExtractors(extractors)
+                .build();
         boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
@@ -199,7 +228,9 @@ public class RuleEvaluatorTest {
         }
 
         String rule = " title = 'The Horus Heresy' ";
-        RuleEvaluator<Object> evaluator = new RuleEvaluator<>(rule);
+        RuleEvaluator<Object> evaluator = RuleEvaluator.createForRule(rule)
+                .build();
+        //RuleEvaluator<Object> evaluator = new RuleEvaluator<>(rule);
         boolean result = evaluator.evaluate(new Book());
 
         Assert.assertTrue(result);
@@ -208,10 +239,23 @@ public class RuleEvaluatorTest {
     @Test(expected = EvalException.class)
     public void testWithoutFieldsValidationFieldException() {
         String rule = " missingField = 'ololo' ";
-        RuleEvaluator<Object> evaluator = new RuleEvaluator<>(rule);
+        RuleEvaluator<Object> evaluator = RuleEvaluator.createForRule(rule)
+                .build();
         boolean result = evaluator.evaluate(new Object());
 
         Assert.assertTrue(result);
+    }
+
+    @Test(expected = DslError.class) //DslError{message='Cannot parse value', token='firstName', startPos=1, endPos=9, line=1}
+    public void testNoUseReflection() {
+        String rule = " firstName = 'John' ";
+        Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
+                "Software engineer" ,"Bachelor", new ArrayList<>());
+
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .validateAgainstClass(Programmer.class)
+                .allowReflectionFieldLookup(false)
+                .build();
     }
 
     class Programmer {
