@@ -13,7 +13,7 @@ Let's imagine we have POJO.
 class Programmer {
     private String firstName; // "John"
     private String lastName; // "Doe"
-    private String birthData; // DD MM YYYY
+    private String birthDate; // DD MM YYYY
     private String location; // "Office1-Room2", "Office5-Room19"
 
     private String grade; // "Junior", "Middle", "Senior", etc.
@@ -32,7 +32,7 @@ DSL allows to operate on string values using following operators:
 * **contains** - check that given field contains given string, \
   e.g. `position contains "engineer"`
 * **contains_regexp** - check that given field contains a sub-string that matches given regular expression, \
-  e.g. `birthData contains_regexp "\d{1,2} 01 \d{4}"` to match people born in January
+  e.g. `birthDate contains_regexp "\d{1,2} 01 \d{4}"` to match people born in January
 * **matches** - check that a value of a given field completely matches given regular expression, \
   e.g. `location matches "^Office5-Room\d{1,3}$"`
 * **IN** - check whether a value of a given field is in the given list, \

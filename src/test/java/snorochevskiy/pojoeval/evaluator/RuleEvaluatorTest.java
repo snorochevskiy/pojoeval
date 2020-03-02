@@ -4,6 +4,7 @@ import snorochevskiy.pojoeval.evaluator.exception.DslError;
 import snorochevskiy.pojoeval.evaluator.exception.EvalException;
 import org.junit.Assert;
 import org.junit.Test;
+import snorochevskiy.pojoeval.util.opt.Opt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.function.Function;
 public class RuleEvaluatorTest {
 
     @Test
-    public void textSimpleEqRule() {
+    public void testSimpleEqRule() {
         String rule = " grade = \"Junior\" ";
 
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
@@ -29,7 +30,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleEqRuleSingleQuotes() {
+    public void testSimpleEqRuleSingleQuotes() {
         String rule = " grade = 'Junior' ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -43,7 +44,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleNotEqRule() {
+    public void testSimpleNotEqRule() {
         String rule = " grade != \"Senior\" ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -57,7 +58,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleNotRule() {
+    public void testSimpleNotRule() {
         String rule = "NOT grade = \"Senior\"";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -71,7 +72,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textDoubleNotRule() {
+    public void testDoubleNotRule() {
         String rule = "NOT NOT grade = \"Junior\"";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -85,7 +86,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleContainsRule() {
+    public void testSimpleContainsRule() {
         String rule = " position contains \"engineer\" ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -99,7 +100,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleContainsRegexpRule() {
+    public void testSimpleContainsRegexpRule() {
         String rule = " location contains_regexp \"Room\\d{2}\" ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -113,7 +114,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleMatchesRule() {
+    public void testSimpleMatchesRule() {
         String rule = "location matches \"^Office\\d+-Room\\d+$\"";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -127,7 +128,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleInRule() {
+    public void testSimpleInRule() {
         String rule = "firstName IN [\"John\", \"Michael\",\"Robert\"]";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -141,7 +142,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSyntacticError() {
+    public void testSyntacticError() {
         String rule = "firstName unsupportedfunc \"ololo\"";
 
         Exception e = null;
@@ -163,7 +164,7 @@ public class RuleEvaluatorTest {
 
 
     @Test
-    public void textOrEqRule() {
+    public void testOrEqRule() {
         String rule = " firstName = \"AAA\" OR lastName= \"Doe\" ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -177,7 +178,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textAndEqRule() {
+    public void testAndEqRule() {
         String rule = " firstName = \"John\" AND lastName= \"Doe\" ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -191,7 +192,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textNestedEqRule() {
+    public void testNestedEqRule() {
         String rule = " lastName = \"Doe\" AND NOT ( firstName = \"Robert\" )";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -205,7 +206,7 @@ public class RuleEvaluatorTest {
     }
 
     @Test
-    public void textSimpleEqRuleWithExtractor() {
+    public void testSimpleEqRuleWithExtractor() {
         String rule = " fullName = \"John Doe\" ";
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
@@ -256,6 +257,54 @@ public class RuleEvaluatorTest {
                 .validateAgainstClass(Programmer.class)
                 .allowReflectionFieldLookup(false)
                 .build();
+    }
+
+    @Test
+    public void testUsingEvalContext_withExtractorFunctions() {
+        String rule = " fullName = 'John Doe' ";
+
+        Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
+                "Software engineer" ,"Bachelor", new ArrayList<>());
+
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .allowReflectionFieldLookup(false)
+                .build();
+
+        Map<String, Function<Programmer,Object>> extractors = Collections.singletonMap("fullName",
+                (Programmer p)->p.getFirstName() + " " + p.getLastName());
+        EvaluationContext<Programmer> context = new EvaluationContext<>(extractors, null);
+
+        boolean result = evaluator.evaluate(pojo, context);
+
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testUsingEvalContext_withExternalExtractor() {
+        String rule = " fullName = 'John Doe' ";
+
+        Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
+                "Software engineer" ,"Bachelor", new ArrayList<>());
+
+        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+                .allowReflectionFieldLookup(false)
+                .build();
+
+        ExternalFieldsExtractor<Programmer> e = new ExternalFieldsExtractor<Programmer>() {
+            @Override
+            public Opt<Object> extractFieldValue(Programmer programmer, String fieldName) {
+                if ("fullName".equals(fieldName)) {
+                    return Opt.of(programmer.getFirstName() + " " + programmer.getLastName());
+                }
+                return Opt.empty();
+            }
+        };
+
+        EvaluationContext<Programmer> context = new EvaluationContext<>(null, e);
+
+        boolean result = evaluator.evaluate(pojo, context);
+
+        Assert.assertTrue(result);
     }
 
     class Programmer {

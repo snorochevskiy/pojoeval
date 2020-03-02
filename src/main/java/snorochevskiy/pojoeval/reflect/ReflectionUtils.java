@@ -1,5 +1,7 @@
 package snorochevskiy.pojoeval.reflect;
 
+import snorochevskiy.pojoeval.util.opt.Opt;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -20,6 +22,14 @@ public class ReflectionUtils {
             return getFieldValue(t, fieldName);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             return null;
+        }
+    }
+
+    public static <T> Opt<String> getFieldValueOpt(T t, String fieldName) {
+        try {
+            return Opt.of(getFieldValue(t, fieldName));
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            return Opt.empty();
         }
     }
 

@@ -9,8 +9,10 @@ import snorochevskiy.pojoeval.rules.dsl.parser.RuleDslLexer;
 import snorochevskiy.pojoeval.rules.dsl.parser.RuleDslParser;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
+import snorochevskiy.pojoeval.util.opt.Opt;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,16 +59,19 @@ public class RuleEvaluator<POJO> implements Serializable {
             }
             throw new DslError("Unable to parse rule: " + e.getMessage(), rule, 0, 0, 0);
         }
-
     }
 
     /**
      * Evaluate rule on a given object.
-     * @param POJO
+     * @param pojo
      * @return
      */
-    public boolean evaluate(POJO POJO) {
-        return compiled.calc(POJO);
+    public boolean evaluate(POJO pojo) {
+        return compiled.calc(pojo, null);
+    }
+
+    public boolean evaluate(POJO pojo, EvaluationContext context) {
+        return compiled.calc(pojo, context);
     }
 
     Expr<POJO,Boolean> parseTopExpr(RuleDslParser.TopExprContext topExprContext) {
@@ -167,8 +172,8 @@ public class RuleEvaluator<POJO> implements Serializable {
             if (relExprContext.Identifier() != null) {
                 String identifierName = relExprContext.Identifier().getText();
                 if (fieldExtractors.containsKey(identifierName)
-                        || useReflection && msgClass == null
-                        || useReflection && ReflectionUtils.hasField(msgClass, identifierName)) {
+                        || msgClass != null && useReflection && ReflectionUtils.hasField(msgClass, identifierName)
+                        || msgClass == null) {
                     return new FieldExpr(identifierName);
                 } else {
                     throw new DslError("Cannot parse value", relExprContext.Identifier().getSymbol());
@@ -209,12 +214,12 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            Boolean v1 = e1.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            Boolean v1 = e1.calc(pojo, context);
             if (v1) {
                 return true;
             }
-            Boolean v2 = e2.calc(POJO);
+            Boolean v2 = e2.calc(pojo, context);
             return v2;
         }
     }
@@ -230,9 +235,9 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            Boolean v1 = e1.calc(POJO);
-            Boolean v2 = e2.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            Boolean v1 = e1.calc(pojo, context);
+            Boolean v2 = e2.calc(pojo, context);
             return v1 && v2;
         }
     }
@@ -246,8 +251,8 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            Boolean v = e.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            Boolean v = e.calc(pojo, context);
             return !v;
         }
     }
@@ -262,12 +267,12 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            T v1 = arg1.calc(POJO);
-            T v2 = arg2.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            T v1 = arg1.calc(pojo, context);
+            T v2 = arg2.calc(pojo, context);
 
             if (v1 == null) {
-
+                return v2 == null || "null".equals(v2);
             }
 
             return v1.equals(v2);
@@ -284,9 +289,9 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            T v1 = arg1.calc(POJO);
-            T v2 = arg2.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            T v1 = arg1.calc(pojo, context);
+            T v2 = arg2.calc(pojo, context);
             return !v1.equals(v2);
         }
     }
@@ -301,9 +306,14 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            String s1 = arg1.calc(POJO);
-            String s2 = arg2.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            String s1 = arg1.calc(pojo, context);
+            String s2 = arg2.calc(pojo, context);
+
+            if (s1 == null) {
+                return false;
+            }
+
             return s1.contains(s2);
         }
     }
@@ -320,8 +330,13 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            String s = arg1.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            String s = arg1.calc(pojo, context);
+
+            if (s == null) {
+                return false;
+            }
+
             Matcher m = pattern.matcher(s);
             boolean result = m.find();
             return result;
@@ -340,8 +355,13 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            String s = arg1.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            String s = arg1.calc(pojo, context);
+
+            if (s == null) {
+                return false;
+            }
+
             Matcher m = pattern.matcher(s);
             boolean result = m.matches();
             return result;
@@ -358,8 +378,11 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public Boolean calc(POJO POJO) {
-            String v = fieldExpr.calc(POJO);
+        public Boolean calc(POJO pojo, EvaluationContext<POJO> context) {
+            String v = fieldExpr.calc(pojo, context);
+            if (v == null) {
+                return false;
+            }
             return stringList.contains(v);
         }
     }
@@ -372,19 +395,29 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public String calc(POJO POJO) {
-            String value = null;
+        public String calc(POJO pojo, EvaluationContext<POJO> context) {
+
+            if (context != null && context.getFieldExtractorsMap() != null && context.getFieldExtractorsMap().containsKey(field)) {
+                return context.getFieldExtractorsMap().get(field).apply(pojo).toString();
+            }
+            if (context != null && context.getExternalFieldsExtractor() != null) {
+                Opt<Object> o = context.getExternalFieldsExtractor().extractFieldValue(pojo, field);
+                if (o.isDefined()) {
+                    return o.get().toString();
+                }
+            }
             if (fieldExtractors.containsKey(field)) {
-                value = fieldExtractors.get(field).apply(POJO).toString();
-            } else if (useReflection) {
-                value = ReflectionUtils.getFieldValueOrNull(POJO, field);
+                return fieldExtractors.get(field).apply(pojo).toString();
+            }
+            if (useReflection) {
+                try {
+                    return ReflectionUtils.getFieldValue(pojo, field);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    // Do nothing
+                }
             }
 
-            if (value == null) {
-                throw new EvalException("Unable to evaluate field '" + field + "'");
-            }
-
-            return value;
+            throw new EvalException("Unable to evaluate field '" + field + "'");
         }
     }
 
@@ -396,13 +429,13 @@ public class RuleEvaluator<POJO> implements Serializable {
         }
 
         @Override
-        public String calc(POJO POJO) {
+        public String calc(POJO pojo, EvaluationContext<POJO> context) {
             return literal;
         }
     }
 
     public static <POJO> Builder<POJO> createForRule(String rule) {
-        return new Builder<POJO>(rule);
+        return new Builder<>(rule);
     }
 
     public static class Builder<POJO> implements Serializable {
