@@ -1,7 +1,7 @@
 grammar RuleDsl;
 
 @header {
-  package snorochevskiy.pojoeval.rules.dsl.parser;
+  package snorochevskiy.pojoeval.rules.dsl.v1.parser;
 }
 
 topExpr : logicExpr EOF ;

@@ -1,4 +1,4 @@
-package snorochevskiy.pojoeval.evaluator;
+package snorochevskiy.pojoeval.v1.evaluator;
 
 import java.util.Map;
 import java.util.function.Function;

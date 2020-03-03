@@ -1,4 +1,4 @@
-package snorochevskiy.pojoeval.util.opt;
+package snorochevskiy.pojoeval.v1.opt;
 
 import java.util.function.Supplier;
 

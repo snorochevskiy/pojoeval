@@ -1,4 +1,4 @@
-package snorochevskiy.pojoeval.evaluator.exception;
+package snorochevskiy.pojoeval.v1.evaluator.exception;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;

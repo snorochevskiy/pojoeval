@@ -1,6 +1,6 @@
-package snorochevskiy.pojoeval.reflect;
+package snorochevskiy.pojoeval.v1.reflect;
 
-import snorochevskiy.pojoeval.util.opt.Opt;
+import snorochevskiy.pojoeval.v1.opt.Opt;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

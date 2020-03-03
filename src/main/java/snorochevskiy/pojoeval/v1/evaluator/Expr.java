@@ -1,4 +1,4 @@
-package snorochevskiy.pojoeval.evaluator;
+package snorochevskiy.pojoeval.v1.evaluator;
 
 import java.io.Serializable;
 

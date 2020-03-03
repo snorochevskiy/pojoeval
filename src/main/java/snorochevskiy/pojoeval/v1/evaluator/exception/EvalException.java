@@ -1,4 +1,4 @@
-package snorochevskiy.pojoeval.evaluator.exception;
+package snorochevskiy.pojoeval.v1.evaluator.exception;
 
 /**
  * Exception occurred during the evaluation on a POJO object.

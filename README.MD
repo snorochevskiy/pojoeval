@@ -56,7 +56,7 @@ Usage
 
 First, add a dependency to the latest version of the artifact: "com.github.snorochevskiy:pojoeval:1.0-SNAPSHOT"
 
-Main class for the DSL is **com.github.snorochevskiy.pojoeval.evaluator.RuleEvaluator**.
+Main class for the DSL is **com.github.snorochevskiy.pojoeval.v1.evaluator.RuleEvaluator**.
 
 If we have a POJO:
 ```java

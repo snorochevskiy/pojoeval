@@ -1,15 +1,15 @@
-package snorochevskiy.pojoeval.evaluator;
+package snorochevskiy.pojoeval.v1.evaluator;
 
-import snorochevskiy.pojoeval.evaluator.exception.DslError;
-import snorochevskiy.pojoeval.evaluator.exception.EvalException;
-import snorochevskiy.pojoeval.reflect.ReflectionUtils;
+import snorochevskiy.pojoeval.v1.evaluator.exception.DslError;
+import snorochevskiy.pojoeval.v1.evaluator.exception.EvalException;
+import snorochevskiy.pojoeval.v1.reflect.ReflectionUtils;
 import org.antlr.v4.runtime.*;
 
-import snorochevskiy.pojoeval.rules.dsl.parser.RuleDslLexer;
-import snorochevskiy.pojoeval.rules.dsl.parser.RuleDslParser;
+import snorochevskiy.pojoeval.rules.dsl.v1.parser.RuleDslLexer;
+import snorochevskiy.pojoeval.rules.dsl.v1.parser.RuleDslParser;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
-import snorochevskiy.pojoeval.util.opt.Opt;
+import snorochevskiy.pojoeval.v1.opt.Opt;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

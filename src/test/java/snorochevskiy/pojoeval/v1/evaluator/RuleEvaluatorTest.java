@@ -1,10 +1,10 @@
-package snorochevskiy.pojoeval.evaluator;
+package snorochevskiy.pojoeval.v1.evaluator;
 
-import snorochevskiy.pojoeval.evaluator.exception.DslError;
-import snorochevskiy.pojoeval.evaluator.exception.EvalException;
+import snorochevskiy.pojoeval.v1.evaluator.exception.DslError;
+import snorochevskiy.pojoeval.v1.evaluator.exception.EvalException;
 import org.junit.Assert;
 import org.junit.Test;
-import snorochevskiy.pojoeval.util.opt.Opt;
+import snorochevskiy.pojoeval.v1.opt.Opt;
 
 import java.util.ArrayList;
 import java.util.Collections;
