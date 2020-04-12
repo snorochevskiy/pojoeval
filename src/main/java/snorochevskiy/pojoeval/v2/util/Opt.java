@@ -1,4 +1,4 @@
-package snorochevskiy.pojoeval.v1.opt;
+package snorochevskiy.pojoeval.v2.util;
 
 import java.util.function.Supplier;
 
@@ -46,6 +46,6 @@ public class Opt<T> {
     }
 
     public static <T> Opt<T> empty() {
-        return new Opt<>();
+        return new Opt<T>();
     }
 }

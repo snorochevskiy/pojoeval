@@ -23,7 +23,7 @@ class Programmer {
 }
 ```
 
-DSL allows to operate on string values using following operators:
+DSL allows to operate on numbers, booleans and string values using following operators:
 
 * **=** - check for equality, e.g. \
   `firstName = "John"`
@@ -37,6 +37,10 @@ DSL allows to operate on string values using following operators:
   e.g. `location matches "^Office5-Room\d{1,3}$"`
 * **IN** - check whether a value of a given field is in the given list, \
   e.g. `grade in ["Junior", "Middle"]`
+
+* Basic arithmetic operations (take number and return Double): `+`, `-`, `*`, `/`, `%`
+* Number comparison (take number and result in bool): `>`, `<`, `>=`, `<=`
+  
 
 Checks can be grouped in complex expressions using combinators:
 * **OR** - check that at least one of two expressions is true, \
@@ -54,21 +58,23 @@ DSL allows string literals both: in single quotes, e.g. `'some literal'` and lit
 Usage
 -----
 
-First, add a dependency to the latest version of the artifact: "com.github.snorochevskiy:pojoeval:1.0-SNAPSHOT"
+First, add a dependency to the latest version of the artifact: "com.github.snorochevskiy:pojoeval:2.0.0-SNAPSHOT"
 
-Main class for the DSL is **com.github.snorochevskiy.pojoeval.v1.evaluator.RuleEvaluator**.
+Main class for the DSL is **com.github.snorochevskiy.pojoeval.v2.evaluator.RuleEvaluator**.
 
 If we have a POJO:
 ```java
-public static class NetworkRouterDiagnosticMessage {
+public static class NetDeviceInfoMsg {
     private String fqdn;
     private String interfaceName;
     private String message;
+    private int level;
 
-    public TestMsg(String fqdn, String interfaceName, String message) {
+    public NetDeviceInfoMsg(String fqdn, String interfaceName, String message, int level) {
         this.fqdn = fqdn;
         this.interfaceName = interfaceName;
         this.message = message;
+        this.level = level;
     }
 
     public String getFqdn() {
@@ -80,19 +86,29 @@ public static class NetworkRouterDiagnosticMessage {
     public String getMessage() {
         return message;
     }
+    public int getLevel() {
+        return level;
+    }
 
 }
 ```
 
 We can write a rule for this POJO as this:
 ```java
-String rule = " fqdn = 'device123.datacenter2.myisp.com' ";
+String rule = " fqdn = 'device123.dc2.myisp.com' AND level > 2";
 
-RuleEvaluator<NetworkRouterDiagnosticMessage> evaluator = new RuleEvaluator<>(rule, NetworkRouterDiagnosticMessage.class);
-NetworkRouterDiagnosticMessage msg = new NetworkRouterDiagnosticMessage("device123.datacenter2.myisp.com", "Eth10", "Aaaaa! Panic !!!");
+RuleEvaluator<NetDeviceInfoMsg> evaluator = RuleEvaluator.<NetDeviceInfoMsg>createForRule(rule)
+    .validateAgainstClass(NetDeviceInfoMsg.class)
+    .allowReflectionFieldLookup(true)
+    .build();
 
-boolean result = evaluator.evaluate(msg); // true
+NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.dc2.myisp.com", "Eth10", "Aaaaa! Panic !!!", 5);
+
+boolean result = evaluator.evaluateBool(msg); // true
 ```
+
+Warning!
+Method `evaluateBool` is nothing but `evaluate()` with _unsafe_ cast to boolean.
 
 Extractors
 ----------
@@ -106,21 +122,24 @@ fqdn, interfaceName, message. We want to be able to operate on market, that can 
 
 ```java
 // Rule that operates on market
-String rule = " datacenter = 'datacenter2' ";
+String rule = " datacenter = 'dc2' ";
 
 // Extractor that provides market from FQDN
-Function<NetworkRouterDiagnosticMessage, String> datacenterExtractor =
-    (NetworkRouterDiagnosticMessage msg)->msg.getFqdn().split("\\.")[1];
+Function<NetDeviceInfoMsg, String> datacenterExtractor =
+    (NetDeviceInfoMsg msg)->msg.getFqdn().split("\\.")[1];
 
 // Configure market extractor for "market" property
-Map<String, Function<NetworkRouterDiagnosticMessage,Object>> extractors =
+Map<String, Function<NetDeviceInfoMsg,Object>> extractors =
     Collections.singletonMap("datacenter", datacenterExtractor);
 
-RuleEvaluator<NetworkRouterDiagnosticMessage> evaluator =
-    new RuleEvaluator<>(rule, NetworkRouterDiagnosticMessage.class, extractors);
-NetworkRouterDiagnosticMessage msg = new NetworkRouterDiagnosticMessage("device123.datacenter2.myisp.com", "Eth10", "Some message");
+RuleEvaluator<NetDeviceInfoMsg> evaluator = RuleEvaluator.<NetDeviceInfoMsg>createForRule(rule)
+    .validateAgainstClass(NetDeviceInfoMsg.class)
+    .withFieldExtractors(extractors)
+    .build();
 
-boolean result = evaluator.evaluate(msg);
+NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.datacenter2.myisp.com", "Eth10", "Some message",3);
+
+boolean result = evaluator.evaluateBool(msg);
 ```
 
 How to build

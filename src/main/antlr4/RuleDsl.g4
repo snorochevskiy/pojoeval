@@ -1,7 +1,7 @@
 grammar RuleDsl;
 
 @header {
-  package snorochevskiy.pojoeval.rules.dsl.v1.parser;
+  package snorochevskiy.pojoeval.rules.dsl.v2.parser;
 }
 
 topExpr : logicExpr EOF ;
@@ -21,24 +21,39 @@ andExpr
 notExpr
   : eqExpr
   | NOT notExpr
-  | '(' logicExpr ')'
   ;
 
 eqExpr
-  : relExpr
-  | eqExpr Eq relExpr
-  | eqExpr NEq relExpr
-  | eqExpr StrContains relExpr
-  | eqExpr StrContainsRegexp relExpr
-  | eqExpr StrMatches relExpr
+  : additiveExpr
+  | eqExpr Eq additiveExpr
+  | eqExpr NEq additiveExpr
+  | relExpr StrContains relExpr
+  | relExpr StrContainsRegexp relExpr
+  | relExpr StrMatches relExpr
   | relExpr In stringList
+  | additiveExpr Compare additiveExpr
+  ;
+
+additiveExpr
+  : multiplicativeExpr
+  | additiveExpr Plus multiplicativeExpr
+  | additiveExpr Minus multiplicativeExpr
+  ;
+
+multiplicativeExpr
+  : relExpr
+  | multiplicativeExpr Multiply relExpr
+  | multiplicativeExpr Divide relExpr
+  | multiplicativeExpr Mod relExpr
   ;
 
 relExpr
   : Identifier
   | StringLiteral
-//  | DigitSequence // TODO: add numbers support
+  | DigitSequence
+  | OpBr logicExpr ClBr
   ;
+
 
 stringList : OpSqBk (StringLiteral Comma )* StringLiteral ClSqBk ;
 
@@ -54,8 +69,19 @@ NOT : 'NOT' | 'not' | 'Not' ;
 
 In : 'IN' | 'in' | 'In' ;
 
+Plus : '+' ;
+Minus : '-' ;
+Multiply : '*';
+Divide : '/';
+Mod : '%';
+
+Compare : '>' | '<' | '>=' | '<=' ;
+
 OpSqBk : '[' ;
 ClSqBk : ']' ;
+
+OpBr : '(' ;
+ClBr : ')' ;
 
 Comma : ',' ;
 
@@ -75,6 +101,10 @@ Nondigit
     :   [a-zA-Z_]
     ;
 
+DigitSequence // TODO: add sign
+    : '-'?Digit+
+    | '-'?Digit+.Digit+
+    ;
 fragment
 Digit
     :   [0-9]
@@ -92,7 +122,9 @@ SCharSequence
 
 fragment
 SChar
-    :   ~["\r\n]
+    :   ~["\r\n']
+    | '\\\''
+    | '\\"'
 //    |   EscapeSequence // Are escape sequences needed?
     |   '\\\n'   // Added line
     |   '\\\r\n' // Added line
