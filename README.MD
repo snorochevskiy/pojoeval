@@ -62,7 +62,7 @@ Usage
 
 First, add a dependency to the latest version of the artifact: "com.github.snorochevskiy:pojoeval:2.0.0-SNAPSHOT"
 
-Main class for the DSL is **snorochevskiy.pojoeval.v2.evaluator.RuleEvaluator**.
+Main class for the DSL is **snorochevskiy.pojoeval.v2.evaluator.Evaluator**.
 
 If we have a POJO:
 ```java
@@ -99,14 +99,14 @@ We can write a rule for this POJO as this:
 ```java
 String rule = " fqdn = 'device123.dc2.myisp.com' AND level > 2";
 
-RuleEvaluator<NetDeviceInfoMsg> evaluator = RuleEvaluator.<NetDeviceInfoMsg>createForRule(rule)
+RuleEvaluator<NetDeviceInfoMsg, Boolean> evaluator = RuleEvaluator.<NetDeviceInfoMsg>createForRule(rule)
     .validateAgainstClass(NetDeviceInfoMsg.class)
     .allowReflectionFieldLookup(true)
-    .build();
+    .buildBoolEvaluator();
 
 NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.dc2.myisp.com", "Eth10", "Aaaaa! Panic !!!", 5);
 
-boolean result = evaluator.evaluateBool(msg); // true
+boolean result = evaluator.evaluate(msg); // true
 ```
 
 Warning!
@@ -134,14 +134,14 @@ Function<NetDeviceInfoMsg, String> datacenterExtractor =
 Map<String, Function<NetDeviceInfoMsg,Object>> extractors =
     Collections.singletonMap("datacenter", datacenterExtractor);
 
-RuleEvaluator<NetDeviceInfoMsg> evaluator = RuleEvaluator.<NetDeviceInfoMsg>createForRule(rule)
+RuleEvaluator<NetDeviceInfoMsg, Boolean> evaluator = RuleEvaluator.<NetDeviceInfoMsg>createForRule(rule)
     .validateAgainstClass(NetDeviceInfoMsg.class)
     .withFieldExtractors(extractors)
-    .build();
+    .buildBoolEvaluator();
 
 NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.datacenter2.myisp.com", "Eth10", "Some message",3);
 
-boolean result = evaluator.evaluateBool(msg);
+boolean result = evaluator.evaluate(msg);
 ```
 
 How to build

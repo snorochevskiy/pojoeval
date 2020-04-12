@@ -14,10 +14,10 @@ public class StringOperationsTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -28,10 +28,10 @@ public class StringOperationsTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -42,10 +42,10 @@ public class StringOperationsTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }

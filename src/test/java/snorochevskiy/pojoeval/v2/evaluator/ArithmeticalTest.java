@@ -12,8 +12,8 @@ public class ArithmeticalTest {
         String rule = "5";
 
 
-        RuleEvaluator<?> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
+        Evaluator<?, Double> evaluator = Evaluator.createForRule(rule)
+                .buildNumberEvaluator();
 
         Assert.assertEquals(ExprResType.NUM, evaluator.getExpectedResultType());
 
@@ -27,8 +27,8 @@ public class ArithmeticalTest {
         String rule = "-5";
 
 
-        RuleEvaluator<?> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
+        Evaluator<?, Double> evaluator = Evaluator.createForRule(rule)
+                .buildNumberEvaluator();
 
         Assert.assertEquals(ExprResType.NUM, evaluator.getExpectedResultType());
 
@@ -42,8 +42,8 @@ public class ArithmeticalTest {
         String rule = "5 + 5.0";
 
 
-        RuleEvaluator<?> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
+        Evaluator<?, Double> evaluator = Evaluator.createForRule(rule)
+                .buildNumberEvaluator();
 
         Assert.assertEquals(ExprResType.NUM, evaluator.getExpectedResultType());
 
@@ -57,7 +57,7 @@ public class ArithmeticalTest {
         String rule = " 5 + 'ololo' ";
 
 
-        RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator.<Programmer>createForRule(rule)
                 .build();
     }
 
@@ -66,11 +66,11 @@ public class ArithmeticalTest {
         String rule = "weight / 2 > 3";
 
 
-        RuleEvaluator<Product> evaluator = RuleEvaluator.<Product>createForRule(rule)
+        Evaluator<Product, Boolean> evaluator = Evaluator.<Product>createForRule(rule)
                 .validateAgainstClass(Product.class)
-                .build();
+                .buildBoolEvaluator();
 
-        boolean b = evaluator.evaluateBool(new Product("Sofa", 10.0));
+        boolean b = evaluator.evaluate(new Product("Sofa", 10.0));
         Assert.assertTrue(b);
     }
 

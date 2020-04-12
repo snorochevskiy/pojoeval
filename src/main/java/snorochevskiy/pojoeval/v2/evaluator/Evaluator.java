@@ -25,15 +25,18 @@ import java.util.stream.Collectors;
  * This class represents an engine for executing DSL expressions on POJOs.
  * @param <POJO> class of POJO that rules are to be evaluated on. Used only for rules validation.
  */
-public class RuleEvaluator<POJO> implements Serializable {
+public class Evaluator<POJO, R> implements Serializable {
 
-    private final Expr<POJO> compiled;
-    private final Class<POJO> msgClass;
-    private Map<String, Function<POJO,Object>> fieldExtractors = new HashMap<>();
-    private boolean useReflection;
+    protected final Expr<POJO> compiled;
+    protected final Class<POJO> msgClass;
+    protected final Class<R> expectedResultType;
+    protected Map<String, Function<POJO,Object>> fieldExtractors = new HashMap<>();
+    protected boolean useReflection;
 
-    private RuleEvaluator(String rule, Class<POJO> msgClass, Map<String, Function<POJO,Object>> fieldExtractors, boolean useReflection) {
+    private Evaluator(String rule, Class<POJO> msgClass, Class<R> expectedResultType, Map<String,
+            Function<POJO,Object>> fieldExtractors, boolean useReflection) {
         this.msgClass = msgClass;
+        this.expectedResultType = expectedResultType;
         this.fieldExtractors.putAll(fieldExtractors);
         this.useReflection = useReflection;
 
@@ -66,20 +69,20 @@ public class RuleEvaluator<POJO> implements Serializable {
      * @param pojo
      * @return
      */
-    public Object evaluate(POJO pojo) {
-        return compiled.eval(pojo, null);
+    public R evaluate(POJO pojo) {
+        Object res = compiled.eval(pojo, null);
+        if (!expectedResultType.isAssignableFrom(res.getClass())) {
+            throw new EvalException("");
+        }
+        return (R) res;
     }
 
-    public boolean evaluateBool(POJO pojo) {
-        return (Boolean) compiled.eval(pojo, null);
-    }
-
-    public Object evaluate(POJO pojo, EvaluationContext context) {
-        return compiled.eval(pojo, context);
-    }
-
-    public boolean evaluateBool(POJO pojo, EvaluationContext context) {
-        return (Boolean)compiled.eval(pojo, context);
+    public R evaluate(POJO pojo, EvaluationContext context) {
+        Object res = compiled.eval(pojo, context);
+        if (!expectedResultType.isAssignableFrom(res.getClass())) {
+            throw new EvalException("");
+        }
+        return (R) res;
     }
 
     public ExprResType getExpectedResultType() {
@@ -871,8 +874,21 @@ public class RuleEvaluator<POJO> implements Serializable {
             return this;
         }
 
-        public RuleEvaluator<POJO> build() {
-            return new RuleEvaluator<>(rule, pojoClass, fieldExtractors, useReflection);
+        public Evaluator<POJO, Object> build() {
+            return new Evaluator<>(rule, pojoClass, Object.class, fieldExtractors, useReflection);
+        }
+
+        public Evaluator<POJO, Boolean> buildBoolEvaluator() {
+            return new Evaluator<>(rule, pojoClass, Boolean.class, fieldExtractors, useReflection);
+        }
+
+        public Evaluator<POJO, String> buildStringEvaluator() {
+            return new Evaluator<>(rule, pojoClass, String.class, fieldExtractors, useReflection);
+        }
+
+        public Evaluator<POJO, Double> buildNumberEvaluator() {
+            return new Evaluator<>(rule, pojoClass, Double.class, fieldExtractors, useReflection);
         }
     }
+
 }

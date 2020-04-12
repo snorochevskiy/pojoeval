@@ -12,8 +12,8 @@ public class SimpleLogicalTest {
     public void testQeTwoString() {
         String rule = " 'aaa' = 'aaa' ";
 
-        RuleEvaluator<?> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
+        Evaluator<?, Boolean> evaluator = Evaluator.createForRule(rule)
+                .buildBoolEvaluator();
         Object result = evaluator.evaluate(null);
 
         System.out.println(result);
@@ -21,15 +21,16 @@ public class SimpleLogicalTest {
 
     @Test
     public void testSimpleEqRule() {
-        String rule = " grade = \"Junior\" ";
+        String rule = " grade = 'Junior' ";
 
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -40,10 +41,10 @@ public class SimpleLogicalTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -54,10 +55,10 @@ public class SimpleLogicalTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -68,10 +69,10 @@ public class SimpleLogicalTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer,Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -82,10 +83,10 @@ public class SimpleLogicalTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }

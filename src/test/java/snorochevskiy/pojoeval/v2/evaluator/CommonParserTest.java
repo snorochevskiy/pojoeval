@@ -20,7 +20,7 @@ public class CommonParserTest {
 
         Exception e = null;
         try {
-            RuleEvaluator.<Programmer>createForRule(rule)
+            Evaluator.<Programmer>createForRule(rule)
                     .validateAgainstClass(Programmer.class)
                     .build();
         } catch (Exception ex) {
@@ -43,11 +43,13 @@ public class CommonParserTest {
 
         Map<String, Function<Programmer,Object>> extractors = Collections.singletonMap("fullName",
                 (Programmer p)->p.getFirstName() + " " + p.getLastName());
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
                 .withFieldExtractors(extractors)
-                .build();
-        boolean result = evaluator.evaluateBool(pojo);
+                .buildBoolEvaluator();
+
+        boolean result = evaluator.evaluate(pojo);
 
         Assert.assertTrue(result);
     }
@@ -59,10 +61,10 @@ public class CommonParserTest {
         }
 
         String rule = " title = 'The Horus Heresy' ";
-        RuleEvaluator<Object> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
-        //RuleEvaluator<Object> evaluator = new RuleEvaluator<>(rule);
-        boolean result = evaluator.evaluateBool(new Book());
+        Evaluator<Object,Boolean> evaluator = Evaluator.createForRule(rule)
+                .buildBoolEvaluator();
+        //Evaluator<Object> evaluator = new Evaluator<>(rule);
+        boolean result = evaluator.evaluate(new Book());
 
         Assert.assertTrue(result);
     }
@@ -70,9 +72,9 @@ public class CommonParserTest {
     @Test(expected = EvalException.class)
     public void testWithoutFieldsValidationFieldException() {
         String rule = " missingField = 'ololo' ";
-        RuleEvaluator<Object> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
-        boolean result = evaluator.evaluateBool(new Object());
+        Evaluator<Object, Boolean> evaluator = Evaluator.createForRule(rule)
+                .buildBoolEvaluator();
+        boolean result = evaluator.evaluate(new Object());
 
         Assert.assertTrue(result);
     }
@@ -83,10 +85,10 @@ public class CommonParserTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .validateAgainstClass(Programmer.class)
                 .allowReflectionFieldLookup(false)
-                .build();
+                .buildBoolEvaluator();
     }
 
     @Test
@@ -96,15 +98,15 @@ public class CommonParserTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .allowReflectionFieldLookup(false)
-                .build();
+                .buildBoolEvaluator();
 
         Map<String, Function<Programmer,Object>> extractors = Collections.singletonMap("fullName",
                 (Programmer p)->p.getFirstName() + " " + p.getLastName());
         EvaluationContext<Programmer> context = new EvaluationContext<>(extractors, null);
 
-        boolean result = evaluator.evaluateBool(pojo, context);
+        boolean result = evaluator.evaluate(pojo, context);
 
         Assert.assertTrue(result);
     }
@@ -116,9 +118,9 @@ public class CommonParserTest {
         Programmer pojo = new Programmer("John", "Doe", "05 10 1970", "Office3-Room10", "Junior",
                 "Software engineer" ,"Bachelor", new ArrayList<>());
 
-        RuleEvaluator<Programmer> evaluator = RuleEvaluator.<Programmer>createForRule(rule)
+        Evaluator<Programmer, Boolean> evaluator = Evaluator.<Programmer>createForRule(rule)
                 .allowReflectionFieldLookup(false)
-                .build();
+                .buildBoolEvaluator();
 
         ExternalFieldsExtractor<Programmer> e = new ExternalFieldsExtractor<Programmer>() {
             @Override
@@ -132,7 +134,7 @@ public class CommonParserTest {
 
         EvaluationContext<Programmer> context = new EvaluationContext<>(null, e);
 
-        boolean result = evaluator.evaluateBool(pojo, context);
+        boolean result = evaluator.evaluate(pojo, context);
 
         Assert.assertTrue(result);
     }

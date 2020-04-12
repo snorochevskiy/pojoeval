@@ -9,12 +9,12 @@ public class ComparisonTest {
     public void testGtTrue() {
         String rule = "5 > 2";
 
-        RuleEvaluator<?> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
+        Evaluator<?, Boolean> evaluator = Evaluator.createForRule(rule)
+                .buildBoolEvaluator();
 
         Assert.assertEquals(ExprResType.BOOL, evaluator.getExpectedResultType());
 
-        boolean b = evaluator.evaluateBool(null);
+        boolean b = evaluator.evaluate(null);
         Assert.assertTrue(b);
     }
 
@@ -23,12 +23,12 @@ public class ComparisonTest {
         String rule = "5 > 12.0";
 
 
-        RuleEvaluator<?> evaluator = RuleEvaluator.createForRule(rule)
-                .build();
+        Evaluator<?, Boolean> evaluator = Evaluator.createForRule(rule)
+                .buildBoolEvaluator();
 
         Assert.assertEquals(ExprResType.BOOL, evaluator.getExpectedResultType());
 
-        boolean b = evaluator.evaluateBool(null);
+        boolean b = evaluator.evaluate(null);
         Assert.assertFalse(b);
     }
 
@@ -37,12 +37,12 @@ public class ComparisonTest {
         String rule = "width > 5 AND height > 2";
 
 
-        RuleEvaluator<Rectangle> evaluator = RuleEvaluator.<Rectangle>createForRule(rule)
-                .build();
+        Evaluator<Rectangle, Boolean> evaluator = Evaluator.<Rectangle>createForRule(rule)
+                .buildBoolEvaluator();
 
         Assert.assertEquals(ExprResType.BOOL, evaluator.getExpectedResultType());
 
-        boolean b = evaluator.evaluateBool(new Rectangle(6, 3));
+        boolean b = evaluator.evaluate(new Rectangle(6, 3));
         Assert.assertTrue(b);
     }
 
@@ -51,14 +51,14 @@ public class ComparisonTest {
         String rule = "width < height + 5";
 
 
-        RuleEvaluator<Rectangle> evaluator = RuleEvaluator.<Rectangle>createForRule(rule)
+        Evaluator<Rectangle, Boolean> evaluator = Evaluator.<Rectangle>createForRule(rule)
                 .validateAgainstClass(Rectangle.class)
                 .allowReflectionFieldLookup(true)
-                .build();
+                .buildBoolEvaluator();
 
         Assert.assertEquals(ExprResType.BOOL, evaluator.getExpectedResultType());
 
-        boolean b = evaluator.evaluateBool(new Rectangle(6, 3));
+        boolean b = evaluator.evaluate(new Rectangle(6, 3));
         Assert.assertTrue(b);
     }
 
