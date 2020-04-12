@@ -2,7 +2,7 @@ Simple DSL for POJOs
 ====================
 
 This artifact represent a minimalistic DSL evaluation engine that allows
-to write simple checks for POJOs.
+to write simple expressions for POJOs.
 
 DSL specification
 -----------------
@@ -20,6 +20,8 @@ class Programmer {
     private String position; // "Software engineer", "Network engineer", "Business analysts"
     private String academicDegree; // "None", "Bachelor", "Master", "PhD"
     private List<String> skills; // ["C++", "Haskell", "Erlang"]
+
+    // Getters
 }
 ```
 
@@ -60,7 +62,7 @@ Usage
 
 First, add a dependency to the latest version of the artifact: "com.github.snorochevskiy:pojoeval:2.0.0-SNAPSHOT"
 
-Main class for the DSL is **com.github.snorochevskiy.pojoeval.v2.evaluator.RuleEvaluator**.
+Main class for the DSL is **snorochevskiy.pojoeval.v2.evaluator.RuleEvaluator**.
 
 If we have a POJO:
 ```java
