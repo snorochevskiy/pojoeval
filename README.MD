@@ -46,14 +46,14 @@ DSL allows to operate on numbers, booleans and string values using following ope
 
 Checks can be grouped in complex expressions using combinators:
 * **OR** - check that at least one of two expressions is true, \
-  e.g. `academicDegree contains "engineer" OR academicDegree == "Master"`
+  e.g. `academicDegree contains "engineer" OR academicDegree = "Master"`
 * **AND** - check that both checks are true, \
-  e.g. `position contains "engineer" AND academicDegree == "None"`
+  e.g. `position contains "engineer" AND academicDegree = "None"`
  * **NOT** - changes result of a boolean expression to the opposite, \
    e.g. `NOT academicDegree in ["None", "Bachelor"]`
 
 Expressions can be grouped with parenthesis: \
-`(academicDegree contains "engineer" OR academicDegree == "Master") AND grade != "Junior"`
+`(academicDegree contains "engineer" OR academicDegree = "Master") AND grade != "Junior"`
 
 DSL allows string literals both: in single quotes, e.g. `'some literal'` and literals in double quotes, e.g. `"some literal"`
 
@@ -109,6 +109,7 @@ NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.dc2.myisp.com", "Eth10", 
 boolean result = evaluator.evaluate(msg); // true
 ```
 
+To refer a field of a nested object, use dot: `nestedObjectField.name`.
 
 Extractors
 ----------
@@ -137,7 +138,7 @@ RuleEvaluator<NetDeviceInfoMsg, Boolean> evaluator = RuleEvaluator.<NetDeviceInf
     .withFieldExtractors(extractors)
     .buildBoolEvaluator();
 
-NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.datacenter2.myisp.com", "Eth10", "Some message",3);
+NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.dc2.myisp.com", "Eth10", "Some message",3);
 
 boolean result = evaluator.evaluate(msg);
 ```
