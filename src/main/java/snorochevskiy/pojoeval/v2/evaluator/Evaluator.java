@@ -279,7 +279,7 @@ public class Evaluator<POJO, R> implements Serializable {
             if (relExprContext.Identifier() != null) {
                 String identifierName = relExprContext.Identifier().getText();
                 if (fieldExtractors.containsKey(identifierName)
-                        || msgClass != null && useReflection && ReflectionUtils.hasField(msgClass, identifierName)
+                        || msgClass != null && useReflection && ReflectionUtils.hasFieldPath(msgClass, identifierName)
                         || msgClass == null) {
                     return new FieldExpr(identifierName);
                 } else {
@@ -317,8 +317,8 @@ public class Evaluator<POJO, R> implements Serializable {
             // TODO: try to get field type from extractor function
             return new FieldExpr(identifierName);
         }
-        if (msgClass != null && useReflection && ReflectionUtils.hasField(msgClass, identifierName)) {
-            ExprResType resType = ReflectionUtils.getFieldType(msgClass, identifierName).get();
+        if (msgClass != null && useReflection && ReflectionUtils.hasFieldPath(msgClass, identifierName)) {
+            ExprResType resType = ReflectionUtils.getFieldExprType(msgClass, identifierName).get();
             return new FieldExpr(identifierName, resType);
         }
         if (msgClass == null) {
@@ -793,11 +793,11 @@ public class Evaluator<POJO, R> implements Serializable {
                 return fieldExtractors.get(field).apply(pojo).toString();
             }
             if (useReflection) {
-                try {
-                    return ReflectionUtils.getFieldValue(pojo, field);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    throw new EvalException("Unable to get field '" + field + "' value via reflection", e);
+                Opt<Object> v = ReflectionUtils.getFieldPathValue(pojo, field);
+                if (v.isNotDefined()) {
+                    throw new EvalException("Unable to get field '" + field + "' value via reflection");
                 }
+                return v.get();
             }
 
             throw new EvalException("Unable to evaluate field '" + field + "'");

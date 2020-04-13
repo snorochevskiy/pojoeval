@@ -1,5 +1,6 @@
 package snorochevskiy.pojoeval.v2.util;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -25,6 +26,11 @@ public class Opt<T> {
         return defined;
     }
 
+    public boolean isNotDefined() {
+        return !defined;
+    }
+
+
     public T get() throws IllegalStateException {
         if (defined) {
             return v;
@@ -39,6 +45,30 @@ public class Opt<T> {
 
     public T getOrElse(Supplier<T> elseSupplier) {
         return defined ? v : elseSupplier.get();
+    }
+
+    public <U> Opt<U> mapNullable(Function<T,U> mapper) {
+        return defined
+                ? Opt.of(mapper.apply(v))
+                : Opt.<U>empty();
+    }
+
+    public <U> Opt<U> mapNonNullable(Function<T,U> mapper) {
+        return defined && v != null
+                ? Opt.of(mapper.apply(v))
+                : Opt.<U>empty();
+    }
+
+    public <U> Opt<U> flatMapNullable(Function<T,Opt<U>> mapper) {
+        return defined
+                ? mapper.apply(v)
+                : Opt.<U>empty();
+    }
+
+    public <U> Opt<U> flatMapNonNullable(Function<T,Opt<U>> mapper) {
+        return defined && v != null
+                ? mapper.apply(v)
+                : Opt.<U>empty();
     }
 
     public static <T> Opt<T> of(T v) {

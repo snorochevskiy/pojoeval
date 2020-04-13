@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 public class ReflectionUtils {
 
@@ -19,18 +20,51 @@ public class ReflectionUtils {
 
     }
 
-    public static boolean hasField(Class cls, String fieldName) {
-        String requiredGetter = getter(fieldName);
-        return Arrays.stream(cls.getMethods())
-            .anyMatch(m -> requiredGetter.equals(m.getName()) && m.getParameterCount() == 0);
+    /**
+     * Searches for a getter method for a field with given name, and returns it's type.
+     * Field name can a dot-separated path that identifies a nested field.
+     *
+     * @param cls
+     * @param fieldName
+     * @return
+     */
+    public static Optional<Class<?>> getFieldPathType(Class<?> cls, String fieldName) {
+
+        BiFunction<Optional<Class<?>>, String, Optional<Class<?>>> reducer =
+                (opCls, name) -> opCls.flatMap((Class<?> c) -> ReflectionUtils.getFieldType(c, name));
+
+        return Arrays.stream(fieldName.split("\\."))
+                .reduce(Optional.ofNullable(cls), reducer, (a,b) -> a);
     }
 
-    public static Optional<ExprResType> getFieldType(Class cls, String fieldName) {
+
+    public static boolean hasFieldPath(Class<?> cls, String fieldName) {
+        return getFieldPathType(cls, fieldName).isPresent();
+    }
+
+    public static Optional<Class<?>> getFieldType(Class cls, String fieldName) {
+        String requiredGetter = getter(fieldName);
+        return Arrays.stream(cls.getMethods())
+                .filter(m -> requiredGetter.equals(m.getName()) && m.getParameterCount() == 0)
+                .findAny()
+                .map(Method::getReturnType);
+    }
+
+    public static Optional<ExprResType> getFieldExprType(Class cls, String fieldName) {
         String requiredGetter = getter(fieldName);
         return Arrays.stream(cls.getMethods())
                 .filter(m -> requiredGetter.equals(m.getName()) && m.getParameterCount() == 0)
                 .findAny()
                 .map(m-> toExprType(m.getReturnType()));
+    }
+
+    public static <T> Opt<Object> getFieldPathValue(T t, String fieldName) {
+
+        BiFunction<Opt<Object>, String, Opt<Object>> reducer =
+                (optObj, name) -> optObj.flatMapNonNullable((Object o) -> ReflectionUtils.getFieldValueOpt(o, name));
+
+        return Arrays.stream(fieldName.split("\\."))
+                .reduce(Opt.of(t), reducer, (a,b) -> a);
     }
 
     public static <T> Object getFieldValueOrNull(T t, String fieldName) {

@@ -109,8 +109,6 @@ NetDeviceInfoMsg msg = new NetDeviceInfoMsg("device123.dc2.myisp.com", "Eth10", 
 boolean result = evaluator.evaluate(msg); // true
 ```
 
-Warning!
-Method `evaluateBool` is nothing but `evaluate()` with _unsafe_ cast to boolean.
 
 Extractors
 ----------
