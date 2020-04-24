@@ -6,13 +6,12 @@ import snorochevskiy.pojoeval.v2.reflect.ReflectionUtils;
 import snorochevskiy.pojoeval.v2.util.Opt;
 import org.antlr.v4.runtime.*;
 
-import snorochevskiy.pojoeval.rules.dsl.v2.parser.RuleDslLexer;
-import snorochevskiy.pojoeval.rules.dsl.v2.parser.RuleDslParser;
+import snorochevskiy.pojoeval.v2.dsl.parser.RuleDslLexer;
+import snorochevskiy.pojoeval.v2.dsl.parser.RuleDslParser;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
